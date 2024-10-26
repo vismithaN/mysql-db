@@ -100,7 +100,7 @@ public class Business {
      * `open` tinyint(1) not null.
      */
     @Column
-    private int open;
+    private boolean open;
 
     /**
      * `attributes` LONGTEXT default null.
