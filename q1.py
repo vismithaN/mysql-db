@@ -69,10 +69,13 @@ config = {
     'db': os.getenv('MYSQL_DB')
 }
 
-conn = MySQLdb.connect(host=config.get('host'),    # Replace with your host
-                           user=config.get('user'),    # Replace with your MySQL username
-                           passwd=config.get('pwd'),     # Replace with your MySQL password
-                           db=config.get('db')) # build the MySQL connection
-query = "select review_count, stars from businesses" # the SQL query
+conn = MySQLdb.connect(host=config.get('host'),
+                       user=config.get('user'),
+                       passwd=config.get('pwd'),
+                       db=config.get('db')) # build the MySQL connection
+query = "select review_count, stars from businesses"  # the SQL query
 df = pd.read_sql(query, con=conn)
-df.describe().to_csv(sys.stdout, header=False, encoding='utf-8', float_format="%.2f")
+df.describe().to_csv(sys.stdout, header=False,
+                     encoding='utf-8',
+                     float_format="%.2f")
+
