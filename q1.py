@@ -62,17 +62,10 @@ import pandas as pd
 import sys
 import os
 
-config = {
-    'host': os.getenv('MYSQL_DB_HOST'),
-    'user': os.getenv('MYSQL_USER'),
-    'pwd': os.getenv('MYSQL_PWD'),
-    'db': os.getenv('MYSQL_DB')
-}
-
-conn = MySQLdb.connect(host=config.get('host'),
-                       user=config.get('user'),
-                       passwd=config.get('pwd'),
-                       db=config.get('db'))  # build the MySQL connection
+conn = MySQLdb.connect(host=os.getenv('MYSQL_DB_HOST'),
+                       user=os.getenv('MYSQL_USER'),
+                       passwd=os.getenv('MYSQL_PWD'),
+                       db=os.getenv('MYSQL_DB'))  # build the MySQL connection
 query = "select review_count, stars from businesses"  # the SQL query
 df = pd.read_sql(query, con=conn)
 df.describe().to_csv(sys.stdout, header=False,
