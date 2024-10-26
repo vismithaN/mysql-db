@@ -250,7 +250,7 @@ public class MySQLTasks {
     private static void q5() {
         String sql = "SELECT b.name FROM businesses b " +
                 "LEFT JOIN checkins c ON b.business_id = c.business_id " +
-                "WHERE b.neighborhood = 'South Side' AND b.name LIKE '%Coast%' AND c.business_id IS NULL";
+                "WHERE b.neighborhood = 'South Side' AND b.name LIKE BINARY '%Coast%' AND c.business_id IS NULL";
         executeDataManipulationQuery(sql);
     }
 

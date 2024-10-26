@@ -75,4 +75,4 @@ conn = MySQLdb.connect(host=config.get('host'),    # Replace with your host
                            db=config.get('db')) # build the MySQL connection
 query = "select review_count, stars from businesses" # the SQL query
 df = pd.read_sql(query, con=conn)
-df.describe().to_csv(sys.stdout, encoding='utf-8', float_format="%.2f")
+df.describe().to_csv(sys.stdout, header=False, encoding='utf-8', float_format="%.2f")
