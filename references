@@ -2,10 +2,22 @@
   "referenceGuide":"Cite all the reference sources in the required format. Proper citations will help you avoid unnecessary trouble but does not make it acceptable to copy code. Read the course and university policy statements in this regard. When working with others, limit the discussion to block diagrams and arrows. Do not look at another students' code. Read the JSON semantics and make use of JSON validator from the Internet if needed.",
   "websites":[
     {
-      "title":"<title of the page>",
-      "url":"<url>",
-      "code":"<explain in which part of your code did you use the snippet or idea>",
-      "description":"<additional information you may find necessary to provide>"
+      "title":"float64 with pandas to_csv",
+      "url":"https://stackoverflow.com/questions/12877189/float64-with-pandas-to-csv",
+      "code":"float_format="%.2f"",
+      "description":"2 decimal places formatting in q1"
+    },
+    {
+          "title":"How do you remove the column name row when exporting a pandas DataFrame?",
+          "url":"https://stackoverflow.com/questions/19781609/how-do-you-remove-the-column-name-row-when-exporting-a-pandas-dataframe",
+          "code":"header=False",
+          "description":"Removing header in df.describe()"
+    },
+    {
+              "title":"SQL = vs LIKE vs LIKE BINARY, not case sensitive",
+              "url":"https://stackoverflow.com/questions/15504554/sql-vs-like-vs-like-binary-not-case-sensitive",
+              "code":"LIKE BINARY",
+              "description":"Case sensitive String comparision for q5"
     }
   ]
 }
