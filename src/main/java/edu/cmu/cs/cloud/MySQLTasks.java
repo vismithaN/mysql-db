@@ -248,7 +248,9 @@ public class MySQLTasks {
      * You are only allowed to edit the sql.
      */
     private static void q5() {
-        String sql = "SELECT b.name FROM businesses b LEFT JOIN checkins c ON b.business_id = c.business_id WHERE b.neighborhood = 'South Side' AND b.name LIKE '%Coast%' AND c.business_id IS NULL";
+        String sql = "SELECT b.name FROM businesses b " +
+                "LEFT JOIN checkins c ON b.business_id = c.business_id " +
+                "WHERE b.neighborhood = 'South Side' AND b.name LIKE '%Coast%' AND c.business_id IS NULL";
         executeDataManipulationQuery(sql);
     }
 
@@ -265,11 +267,9 @@ public class MySQLTasks {
      * You are only allowed to edit the sql.
      */
     private static void q6() {
-        String sql = "SELECT r.user_id\n" +
-                "FROM reviews r\n" +
-                "JOIN tips t ON r.user_id = t.user_id\n" +
-                "WHERE r.cool = (SELECT MAX(cool) FROM reviews)\n" +
-                "GROUP BY r.user_id";
+        String sql = "SELECT distinct(r.user_id)  FROM reviews r " +
+                "JOIN tips t ON r.user_id = t.user_id " +
+                "WHERE r.cool = ( SELECT MAX(r2.cool) FROM reviews r2  JOIN tips t2 ON r2.user_id = t2.user_id )";
         executeDataManipulationQuery(sql);
     }
 
