@@ -153,7 +153,7 @@ public class MySQLTasks {
      */
     private static void q2() {
         dropCustomIndexesOnReviews();
-        String sql = "";
+        String sql = "SELECT user_id FROM reviews WHERE cool = (SELECT MAX(cool) FROM reviews)";
         executeDataManipulationQuery(sql);
         printScannedRows(sql);
     }
@@ -171,7 +171,7 @@ public class MySQLTasks {
      * The index should be a single-column index instead of a composite index.
      */
     private static void q3() {
-        String sql = "";
+        String sql = "CREATE index review_cool_index on reviews (cool)";
         executeDataDefinitionQuery(sql);
         printIndexColumnNames("reviews");
     }
@@ -223,7 +223,7 @@ public class MySQLTasks {
      * </pre>
      */
     private static void q4() {
-        String sql = "";
+        String sql = "SELECT user_id FROM reviews WHERE cool = (SELECT MAX(cool) FROM reviews)";;
         executeDataManipulationQuery(sql);
         printScannedRows(sql);
     }
@@ -248,7 +248,7 @@ public class MySQLTasks {
      * You are only allowed to edit the sql.
      */
     private static void q5() {
-        String sql = "";
+        String sql = "SELECT b.name FROM businesses b LEFT JOIN checkins c ON b.business_id = c.business_id WHERE b.neighborhood = 'South Side' AND b.name LIKE '%Coast%' AND c.business_id IS NULL";
         executeDataManipulationQuery(sql);
     }
 
@@ -265,7 +265,7 @@ public class MySQLTasks {
      * You are only allowed to edit the sql.
      */
     private static void q6() {
-        String sql = "";
+        String sql = "SELECT r.user_id FROM reviews r JOIN tips t ON r.user_id = t.user_id WHERE r.cool = (SELECT MAX(cool) FROM reviews)";
         executeDataManipulationQuery(sql);
     }
 
@@ -278,7 +278,11 @@ public class MySQLTasks {
      * You are only allowed to edit the sql.
      */
     private static void q7() {
-        String sql = "";
+        String sql = "SELECT city, AVG(stars) AS avg_rating\n" +
+                "FROM businesses\n" +
+                "GROUP BY city\n" +
+                "ORDER BY avg_rating DESC, city ASC\n" +
+                "LIMIT 3";
         executeDataManipulationQuery(sql);
     }
 
