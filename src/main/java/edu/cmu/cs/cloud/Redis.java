@@ -319,8 +319,8 @@ public class Redis {
         LinkedList<String> list = (LinkedList<String>) store.get(k);
         if (list == null) {
             return null;
-        }
-        return list.removeLast();
+        } else if(list.isEmpty()) return null;
+        else return list.removeLast();
     }
 
 }

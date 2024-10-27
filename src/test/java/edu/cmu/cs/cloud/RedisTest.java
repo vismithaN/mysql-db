@@ -164,5 +164,7 @@ class RedisTest {
         redisClient.rpush("key1", "v1","v2","v3");
         assertEquals("v3", redisClient.rpop("key1"));
         assertNotEquals("v1", redisClient.rpop("key1"));
+        assertEquals("v1", redisClient.rpop("key1"));
+        assertNull(redisClient.rpop("key1"));
     }
 }
