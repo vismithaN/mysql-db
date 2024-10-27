@@ -199,11 +199,11 @@ public class MongoDBTasks {
      * list and/or return type.
      */
     private static void q10() throws IOException {
-        Bson query = and(or(regex("neighborhood", "Downtown"), regex("neighborhood", "Oakland")),
-                regex("name", "India"),
+        Bson query = and(regex("name", "India"),
+                or(regex("neighborhood", "Downtown"), regex("neighborhood", "Oakland")),
                 regex("city", "Pittsburgh"),
-                regex("hours.Friday", "17:00") ,
-                eq("attributes.RestaurantsDelivery", true)
+                regex("attributes", "'Friday': '17:00"),
+                regex("attributes", "'RestaurantsDelivery': True")
         );
 
         List<Document> result = mongoCollection.find(query)
