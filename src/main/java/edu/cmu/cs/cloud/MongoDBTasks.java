@@ -234,20 +234,17 @@ public class MongoDBTasks {
         Bson query = and(
                 regex("city","Ahwatukee"),
                 regex("name","Dental"),
-                gt("attributes.stars",4),
-                eq("attributes.insurance",true),
-                eq("attributes.appointments",true)
+                gte("stars",4),
+                regex("attributes","'AcceptsInsurance': True"),
+                regex("attributes","'ByAppointmentOnly': True")
         );
         Bson projection = include("name", "address");
         List<Document> result = mongoCollection.find(query).projection(projection).into(new ArrayList<>());
         for(Document doc: result){
-            System.out.println(doc.toJson());
+            String name = doc.getString("name");
+            String address = doc.getString("address");
+            System.out.println("Name: " + name + ", Address: " + address);
         }
-//        mongoCollection.find(query).projection(projection).into(new ArrayList<>()).forEach((Consumer<Document>) doc -> {
-//            String name = doc.getString("name");
-//            String address = doc.getString("address");
-//            System.out.println("Name: " + name + ", Address: " + address);
-//        });
     }
 
     /**
