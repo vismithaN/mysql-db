@@ -7,21 +7,24 @@ import com.mongodb.client.MongoDatabase;
 import com.mongodb.client.model.Accumulators;
 import com.mongodb.client.model.Aggregates;
 import com.mongodb.client.model.Filters;
-import com.mongodb.client.model.Projections;
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 import org.bson.Document;
 import org.bson.conversions.Bson;
 import java.io.IOException;
-import java.util.*;
-import java.util.function.Consumer;
+import java.util.List;
+import java.util.Arrays;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Objects;
+
 
 import static com.mongodb.client.model.Aggregates.count;
 import static com.mongodb.client.model.Aggregates.group;
-import static com.mongodb.client.model.Filters.*;
-import static com.mongodb.client.model.Projections.fields;
-import static com.mongodb.client.model.Projections.include;
-
+import static com.mongodb.client.model.Filters.regex;
+import static com.mongodb.client.model.Filters.and;
+import static com.mongodb.client.model.Filters.or;
+import static com.mongodb.client.model.Filters.gte;
 
 public class MongoDBTasks {
     /**
@@ -250,7 +253,8 @@ public class MongoDBTasks {
         )).into(new ArrayList<>());
 
         for (Document doc : result) {
-            System.out.println("Name: "+doc.getString("name")+", Address: "+doc.getString("address"));
+            System.out.println("Name: " + doc.getString("name")
+                    + ", Address: " + doc.getString("address"));
         }
 
     }
