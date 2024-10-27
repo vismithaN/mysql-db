@@ -157,13 +157,12 @@ public class MongoDBTasks {
     private static void q9() throws IOException {
         Bson query = and(
                 regex("neighborhood", "Shadyside"),
-                elemMatch("categories", eq("Asian Fusion")),
-                eq("attributes.WiFi", "True"),
-                eq("attributes.BikeParking", "True")
+                elemMatch("categories", eq("Asian Fusion"))
+//                eq("attributes.WiFi", "True"),
+//                eq("attributes.BikeParking", "True")
         );
 
-        List<Document> result = mongoCollection.find(query)
-                .projection(include("name")).into(new ArrayList<>());
+        List<Document> result= mongoCollection.find(query).projection(include("name")).into(new ArrayList<>());
         System.out.println("Scan finished. "+result);
         for(Document doc: result){
            System.out.println("Scan finished. " + doc.toJson());
