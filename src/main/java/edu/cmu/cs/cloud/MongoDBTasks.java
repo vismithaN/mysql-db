@@ -4,6 +4,8 @@ import com.mongodb.MongoClient;
 import com.mongodb.MongoClientURI;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
+import com.mongodb.client.model.Accumulators;
+import com.mongodb.client.model.Aggregates;
 import com.mongodb.client.model.Filters;
 import com.mongodb.client.model.Projections;
 import org.apache.log4j.Level;
@@ -165,8 +167,6 @@ public class MongoDBTasks {
 
         List<String> distinctNames = mongoCollection.distinct("name", query, String.class)
                 .into(new ArrayList<>());
-
-//        List<Document> result= mongoCollection.find(query).projection(include("name")).into(new ArrayList<>());
         for (String doc : distinctNames) {
             System.out.println(doc);
         }
@@ -209,14 +209,10 @@ public class MongoDBTasks {
                 regex("attributes", "'RestaurantsDelivery': True")
         );
 
-        List<Document> result = mongoCollection.find(query)
-                .projection(include("name")).into(new ArrayList<>());
-        List<String> businessNames = new ArrayList<>();
-        for (Document doc : result) {
-            businessNames.add(doc.getString("name"));
-        }
-        Collections.sort(businessNames);
-        for (String name : businessNames) {
+        List<String> distinctNames = mongoCollection.distinct("name", query, String.class)
+                .into(new ArrayList<>());
+        Collections.sort(distinctNames);
+        for (String name : distinctNames) {
             System.out.println(name);
         }
     }
@@ -234,20 +230,29 @@ public class MongoDBTasks {
      * list and/or return type.
      */
     private static void q11() throws IOException {
-        Bson query = and(
-                regex("city","Ahwatukee"),
-                regex("name","Dental"),
-                gte("stars",4),
-                regex("attributes","'AcceptsInsurance': True"),
-                regex("attributes","'ByAppointmentOnly': True")
+        Bson match = and(
+                regex("city", "Ahwatukee"),
+                regex("name", "Dental"),
+                gte("stars", 4),
+                regex("attributes", "'AcceptsInsurance': True"),
+                regex("attributes", "'ByAppointmentOnly': True")
         );
-        Bson projection = include("name", "address");
-        List<Document> result = mongoCollection.find(query).projection(projection).into(new ArrayList<>());
-        for(Document doc: result){
-            String name = doc.getString("name");
-            String address = doc.getString("address");
-            System.out.println("Name: " + name + ", Address: " + address);
+
+        Bson group = Aggregates.group(
+                new Document("name", "$name").append("address", "$address"),
+                Accumulators.first("name", "$name"),
+                Accumulators.first("address", "$address")
+        );
+
+        List<Document> result = mongoCollection.aggregate(Arrays.asList(
+                Aggregates.match(match),
+                group
+        )).into(new ArrayList<>());
+
+        for (Document doc : result) {
+            System.out.println(doc.toJson());
         }
+
     }
 
     /**
