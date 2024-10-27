@@ -30,8 +30,12 @@ public class Server {
      * @return true if the reservation was successful, false otherwise.
      */
     public boolean reserve(String resourceID, Integer userID) {
-        // TODO: complete this function
-        throw new RuntimeException("To be implemented");
+        if(jedis.exists(resourceID)) {
+            return false;
+        }
+        else {
+            return lock.acquireLock(resourceID,5L);
+        }
     }
 
     /**
@@ -43,6 +47,6 @@ public class Server {
      */
     public boolean checkout(String resourceID, Integer userID) {
         // TODO: complete this function
-        throw new RuntimeException("To be implemented");
+        return lock.releaseLock(resourceID);
     }
 }

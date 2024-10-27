@@ -3,6 +3,8 @@ package edu.cmu.cs.cloud;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.params.SetParams;
 
+import java.util.Objects;
+
 
 /**
  * A class that implements a distributed lock using Redis.
@@ -27,12 +29,13 @@ public class RedisLock {
      * @return true if the lock was successfully acquired, false otherwise.
      */
     public boolean acquireLock(String lockKey, Long ttl) {
-        // used to set any additional options for the redis command
-        SetParams setParams = new SetParams(); 
-        // TODO: complete this function
-        String result = jedis.set("", "", setParams);
-        throw new RuntimeException("To be implemented");
+        // Setting parameters to use NX and EX and
+        // to set the lock key with value "locked"
+        SetParams setParams = new SetParams().nx().ex(ttl.intValue());
+        String result = jedis.set(lockKey, "locked", setParams);
+        return "OK".equals(result);
     }
+
 
     /**
      * Attempts to release a previously acquired lock.
@@ -43,7 +46,12 @@ public class RedisLock {
      * @return true if the lock was successfully released, false otherwise.
      */
     public boolean releaseLock(String lockKey) {
-        // TODO: complete this function
-        throw new RuntimeException("To be implemented");
+        String lock = jedis.get(lockKey);
+        if(Objects.equals(lock, "locked")) {
+            long result = jedis.del(lockKey);
+            return result == 1L;
+        } else {
+            return false;
+        }
     }
 }
