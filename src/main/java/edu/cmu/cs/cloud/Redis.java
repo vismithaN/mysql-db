@@ -3,6 +3,8 @@ package edu.cmu.cs.cloud;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
+import java.util.Collections;
 
 /**
  * A simplified version of Redis.
@@ -199,8 +201,13 @@ public class Redis {
             m = new HashMap<>();
             store.put(k, m);
         }
-        throw new UnsupportedOperationException(
-                "Waiting to be implemented");
+        if(m.containsKey(f)) {
+            m.put(f, v);
+            return 0;
+        } else {
+            m.put(f, v);
+            return 1;
+        }
     }
 
     /**
@@ -218,9 +225,9 @@ public class Redis {
         HashMap<String, String> m = (HashMap<String, String>) store.get(k);
         if (m == null) {
             return null;
+        } else {
+            return m.get(f);
         }
-        throw new UnsupportedOperationException(
-                "Waiting to be implemented");
     }
 
     /**
@@ -242,8 +249,13 @@ public class Redis {
         if (m == null) {
             return list;
         }
-        throw new UnsupportedOperationException(
-                "Waiting to be implemented");
+        else {
+            for (Map.Entry<String, String> f : m.entrySet()) {
+                list.add(f.getKey());
+                list.add(f.getValue());
+            }
+        }
+        return list;
     }
 
     /**
@@ -286,10 +298,10 @@ public class Redis {
         LinkedList<String> list = (LinkedList<String>) store.get(k);
         if (list == null) {
             list = new LinkedList<>();
-            store.put(k, list);
         }
-        throw new UnsupportedOperationException(
-                "Waiting to be implemented");
+        Collections.addAll(list, vs);
+        store.put(k, list);
+        return list.size();
     }
 
     /**
@@ -309,7 +321,7 @@ public class Redis {
         if (list == null) {
             return null;
         }
-        throw new UnsupportedOperationException(
-                "Waiting to be implemented");
+        return list.removeLast();
     }
+
 }

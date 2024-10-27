@@ -4,7 +4,10 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import java.lang.reflect.Field;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
@@ -103,31 +106,63 @@ class RedisTest {
 
     @Test
     void hset() {
-        throw new RuntimeException("add test cases on your own");
+        Redis redisClient = new Redis();
+        assertEquals(1, redisClient.hset("key1", "name", "cloud"));
+        assertEquals(0, redisClient.hset("key1", "name", "computing"));
+        assertNotEquals(0, redisClient.hset("key2", "sub", "data"));
+        assertNotEquals(1, redisClient.hset("key2", "sub", "hci"));
     }
 
     @Test
     void hget() {
-        throw new RuntimeException("add test cases on your own");
+        Redis redisClient = new Redis();
+        redisClient.hset("key1", "name", "cloud");
+        redisClient.hset("key1", "name", "computing");
+        assertEquals("computing", redisClient.hget("key1", "name"));
+        assertNull( redisClient.hget("key3", "name"));
+        assertNull( redisClient.hget("key1", "address"));
+        assertNotNull(redisClient.hget("key1", "name"));
+        assertEquals("cloud", redisClient.hget("key1", "name"));
     }
 
     @Test
     void hgetall() {
-        throw new RuntimeException("add test cases on your own");
+        Redis redisClient = new Redis();
+        redisClient.hset("key1", "name", "computing");
+        redisClient.hset("key1", "address", "XYZ");
+        List<String> expected = new LinkedList<>();
+        expected.add("name");
+        expected.add("computing");
+        expected.add("address");
+        expected.add("XYZ");
+        assertEquals(expected, redisClient.hgetall("key1"));
+        assertEquals(new ArrayList<>(), redisClient.hgetall("key2"));
+        assertNotNull(redisClient.hgetall("key2"));
     }
 
     @Test
     void llen() {
-        throw new RuntimeException("add test cases on your own");
+        Redis redisClient = new Redis();
+        redisClient.rpush("key1", "v1","v2","v3");
+        assertEquals(0, redisClient.llen("randomly"));
+        assertEquals(3, redisClient.llen("key1"));
+        assertNotEquals(6, redisClient.llen("key1"));
     }
 
     @Test
     void rpush() {
-        throw new RuntimeException("add test cases on your own");
+        Redis redisClient = new Redis();
+        assertEquals(3, redisClient.rpush("key1", "v1","v2","v3"));
+        assertEquals(6, redisClient.rpush("key1", "v4","v5","v6"));
+        assertNotEquals(0, redisClient.rpush("key2", "v4","v5","v6"));
     }
 
     @Test
     void rpop() {
-        throw new RuntimeException("add test cases on your own");
+        Redis redisClient = new Redis();
+        assertNull(redisClient.rpop("key1"));
+        redisClient.rpush("key1", "v1","v2","v3");
+        assertEquals("v3", redisClient.rpop("key1"));
+        assertNotEquals("v1", redisClient.rpop("key1"));
     }
 }
