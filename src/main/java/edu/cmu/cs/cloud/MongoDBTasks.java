@@ -4,6 +4,7 @@ import com.mongodb.MongoClient;
 import com.mongodb.MongoClientURI;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
+import com.mongodb.client.model.Filters;
 import com.mongodb.client.model.Projections;
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
@@ -155,11 +156,11 @@ public class MongoDBTasks {
      * list and/or return type.
      */
     private static void q9() throws IOException {
-        Bson query = and(
+        Bson query = Filters.and(
                 regex("neighborhood", "Shadyside"),
-                elemMatch("categories", eq("Asian Fusion"))
-//                eq("attributes.WiFi", "True"),
-//                eq("attributes.BikeParking", "True")
+                regex("categories", "Asian Fusion"),
+                regex("attributes", "'WiFi':True"),
+                regex("attributes", "'BikeParking':True")
         );
 
         List<Document> result= mongoCollection.find(query).projection(include("name")).into(new ArrayList<>());
