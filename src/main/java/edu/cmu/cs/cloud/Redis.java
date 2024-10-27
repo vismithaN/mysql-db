@@ -201,7 +201,7 @@ public class Redis {
             m = new HashMap<>();
             store.put(k, m);
         }
-        if(m.containsKey(f)) {
+        if (m.containsKey(f)) {
             m.put(f, v);
             return 0;
         } else {
@@ -248,8 +248,7 @@ public class Redis {
         HashMap<String, String> m = (HashMap<String, String>) store.get(k);
         if (m == null) {
             return list;
-        }
-        else {
+        } else {
             for (Map.Entry<String, String> f : m.entrySet()) {
                 list.add(f.getKey());
                 list.add(f.getValue());

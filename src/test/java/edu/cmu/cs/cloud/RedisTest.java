@@ -119,8 +119,8 @@ class RedisTest {
         redisClient.hset("key1", "name", "cloud");
         redisClient.hset("key1", "name", "computing");
         assertEquals("computing", redisClient.hget("key1", "name"));
-        assertNull( redisClient.hget("key3", "name"));
-        assertNull( redisClient.hget("key1", "address"));
+        assertNull(redisClient.hget("key3", "name"));
+        assertNull(redisClient.hget("key1", "address"));
         assertNotNull(redisClient.hget("key1", "name"));
         assertNotEquals("cloud", redisClient.hget("key1", "name"));
     }
