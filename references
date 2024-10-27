@@ -24,6 +24,13 @@
                   "url":"https://www.mongodb.com/docs/drivers/java/sync/current/fundamentals/builders/filters/#std-label-comparison",
                   "code":"find()",
                   "description":"Find API to execute search"
-        }
+    },
+    {
+                      "title":"HGETALL",
+                      "url":"https://redis.io/docs/latest/commands/hgetall/",
+                      "code":"hgetall()",
+                      "description":"Understand the working og hgetall()"
+    }
+
   ]
 }
