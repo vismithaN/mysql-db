@@ -159,8 +159,8 @@ public class MongoDBTasks {
         Bson query = Filters.and(
                 regex("neighborhood", "Shadyside"),
                 regex("categories", "Asian Fusion"),
-                regex("attributes", "'WiFi':'free'"),
-                regex("attributes", "'BikeParking':True")
+                regex("attributes", "'WiFi': 'free'"),
+                regex("attributes", "'BikeParking': True")
         );
 
         List<Document> result= mongoCollection.find(query).projection(include("name")).into(new ArrayList<>());
