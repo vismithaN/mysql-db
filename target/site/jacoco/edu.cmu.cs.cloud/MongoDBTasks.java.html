@@ -1,0 +1,283 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>MongoDBTasks.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">pdatabase</a> &gt; <a href="index.source.html" class="el_package">edu.cmu.cs.cloud</a> &gt; <span class="el_source">MongoDBTasks.java</span></div><h1>MongoDBTasks.java</h1><pre class="source lang-java linenums">package edu.cmu.cs.cloud;
+
+import com.mongodb.MongoClient;
+import com.mongodb.MongoClientURI;
+import com.mongodb.client.MongoCollection;
+import com.mongodb.client.MongoDatabase;
+import com.mongodb.client.model.Accumulators;
+import com.mongodb.client.model.Aggregates;
+import com.mongodb.client.model.Filters;
+import org.apache.log4j.Level;
+import org.apache.log4j.Logger;
+import org.bson.Document;
+import org.bson.conversions.Bson;
+import java.io.IOException;
+import java.util.List;
+import java.util.Arrays;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Objects;
+
+
+import static com.mongodb.client.model.Aggregates.count;
+import static com.mongodb.client.model.Aggregates.group;
+import static com.mongodb.client.model.Filters.regex;
+import static com.mongodb.client.model.Filters.and;
+import static com.mongodb.client.model.Filters.or;
+import static com.mongodb.client.model.Filters.gte;
+
+<span class="nc" id="L29">public class MongoDBTasks {</span>
+    /**
+     * The variable storing the mongodb connection string
+     */
+    private static String connectionString;
+    /**
+     * MongoClientURI object
+     */
+    private static MongoClientURI mongoClientURI;
+    /**
+     * MongoClient object
+     */
+    private static MongoClient mongoClient;
+    /**
+     * MongoDarabase object
+     */
+    private static MongoDatabase mongoDatabase;
+    /**
+     * MongoCollection Object
+     */
+    private static MongoCollection&lt;Document&gt; mongoCollection;
+    /**
+     * Logger.
+     */
+<span class="nc" id="L53">    private static final Logger LOGGER = Logger.getRootLogger();</span>
+
+    /**
+     * Initialize MongoDB connection.
+     *
+     * @throws IOException if a network exception occurs.
+     */
+    private static void initializeConnection() throws IOException {
+        // Turn of the logging to get rid of unnecessary standard output.
+<span class="nc" id="L62">        LOGGER.setLevel(Level.OFF);</span>
+<span class="nc" id="L63">        connectionString = System.getenv(&quot;CS&quot;);</span>
+
+        // Validate the connection string
+<span class="nc bnc" id="L66" title="All 4 branches missed.">        if (connectionString == null || connectionString.isEmpty()) {</span>
+<span class="nc" id="L67">            System.out.println(&quot;Connection string (CS) is not set in the environment variables.&quot;);</span>
+<span class="nc" id="L68">            return;</span>
+        }
+
+        // create a mongoURI out of the connection string
+<span class="nc" id="L72">        mongoClientURI = new MongoClientURI(connectionString);</span>
+
+        // use the URI object to create a mongoClient object
+<span class="nc" id="L75">        mongoClient = new MongoClient(mongoClientURI);</span>
+
+        // fetch the database
+<span class="nc" id="L78">        mongoDatabase = mongoClient.getDatabase(&quot;cosmos&quot;);</span>
+
+        // fetch the collection from the database
+<span class="nc" id="L81">        mongoCollection = mongoDatabase.getCollection(&quot;yelp&quot;);</span>
+<span class="nc" id="L82">    }</span>
+
+    /**
+     * Clean up resources.
+     *
+     * @throws IOException
+     * Throw IOEXception
+     */
+    private static void cleanup() throws IOException {
+<span class="nc bnc" id="L91" title="All 2 branches missed.">        if (mongoClient != null) {</span>
+<span class="nc" id="L92">            mongoClient.close();</span>
+        }
+<span class="nc" id="L94">    }</span>
+
+    /**
+     * You should complete the missing parts in the following method.
+     * Feel free to add helper functions if necessary.
+     *
+     * For all questions, output your answer in ONE single line,
+     * i.e. use System.out.print().
+     *
+     * @param args The arguments for main method.
+     * @throws IOException if a remote or network exception occurs.
+     */
+    public static void main(String[] args) throws Throwable {
+<span class="nc" id="L107">        initializeConnection();</span>
+<span class="nc bnc" id="L108" title="All 6 branches missed.">        switch (args[0]) {</span>
+            case &quot;demo&quot;:
+<span class="nc" id="L110">                demo();</span>
+<span class="nc" id="L111">                break;</span>
+            case &quot;q9&quot;:
+<span class="nc" id="L113">                q9();</span>
+<span class="nc" id="L114">                break;</span>
+            case &quot;q10&quot;:
+<span class="nc" id="L116">                q10();</span>
+<span class="nc" id="L117">                break;</span>
+            case &quot;q11&quot;:
+<span class="nc" id="L119">                q11();</span>
+<span class="nc" id="L120">                break;</span>
+            case &quot;q12&quot;:
+<span class="nc" id="L122">                q12();</span>
+<span class="nc" id="L123">                break;</span>
+            default:
+                break;
+        }
+<span class="nc" id="L127">        cleanup();</span>
+<span class="nc" id="L128">    }</span>
+
+    /**
+     * This is a demo of how to use MongoDB Java API.
+     * It will print the number of businesses in &quot;Pittsburgh&quot;.
+     *
+     * @throws IOException if a remote or network exception occurs.
+     */
+    private static void demo() throws IOException {
+<span class="nc" id="L137">        Bson query = regex(&quot;city&quot;, &quot;Pittsburgh&quot;);</span>
+
+<span class="nc" id="L139">        long count = mongoCollection.countDocuments(query);</span>
+
+<span class="nc" id="L141">        System.out.println(&quot;Scan finished. &quot; + count + &quot; match(es) found.&quot;);</span>
+<span class="nc" id="L142">    }</span>
+
+    /**
+     * Question 9.
+     *
+     * Scenario:
+     * What's that new &quot;Asian Fusion&quot; place in &quot;Shadyside&quot; with free wifi and
+     * bike parking?
+     *
+     * Print each name of the business on a single line.
+     * If there are multiple answers, print all of them.
+     *
+     * Hint:
+     * 1. The &quot;neighborhood&quot; column should contain &quot;Shadyside&quot; as a substring.
+     * 2. The &quot;categories&quot; column should contain &quot;Asian Fusion&quot; as a substring.
+     * 3. The &quot;WiFi&quot; and &quot;BikeParking&quot; information can be found in the
+     * &quot;attributes&quot; column. Please be careful about the format of the data.
+     *
+     * You are allowed to make changes such as modifying method name, parameter
+     * list and/or return type.
+     */
+    private static void q9() throws IOException {
+<span class="nc" id="L164">        Bson query = Filters.and(</span>
+<span class="nc" id="L165">                regex(&quot;neighborhood&quot;, &quot;Shadyside&quot;),</span>
+<span class="nc" id="L166">                regex(&quot;categories&quot;, &quot;Asian Fusion&quot;),</span>
+<span class="nc" id="L167">                regex(&quot;attributes&quot;, &quot;'WiFi': 'free'&quot;),</span>
+<span class="nc" id="L168">                regex(&quot;attributes&quot;, &quot;'BikeParking': True&quot;)</span>
+        );
+
+<span class="nc" id="L171">        List&lt;String&gt; distinctNames = mongoCollection.distinct(&quot;name&quot;, query, String.class)</span>
+<span class="nc" id="L172">                .into(new ArrayList&lt;&gt;());</span>
+<span class="nc bnc" id="L173" title="All 2 branches missed.">        for (String doc : distinctNames) {</span>
+<span class="nc" id="L174">            System.out.println(doc);</span>
+<span class="nc" id="L175">        }</span>
+<span class="nc" id="L176">    }</span>
+
+    /**
+     * Question 10.
+     *
+     * Scenario:
+     * I'm looking for some Indian food to eat in Downtown or Oakland of Pittsburgh
+     * that start serving on Fridays at 5pm, but still deliver in case I'm too lazy
+     * to drive there.
+     *
+     * Print each name of the business on a single line.
+     * If there are multiple answers, print all of them
+     * in ascending lexicographical order.
+     *
+     * Hint:
+     * 1. The &quot;name&quot; column should contain &quot;India&quot; as a substring.
+     * 2. The &quot;neighborhood&quot; column should contain &quot;Downtown&quot; or &quot;Oakland&quot;
+     * as a substring.
+     * 3. The &quot;city&quot; column should contain &quot;Pittsburgh&quot; as a substring.
+     * 4. The &quot;hours&quot; column shows the hours when businesses start serving.
+     * 5. The &quot;RestaurantsDelivery&quot; information can be found in the
+     * &quot;attributes&quot; column.
+     *
+     * Note:
+     * Only for this question, to guarrentee the ascending lexicographical
+     * order, you are allowed to sort the result of your query with Java code.
+     * No other further processing is allowed.
+     *
+     * You are allowed to make changes such as modifying method name, parameter
+     * list and/or return type.
+     */
+    private static void q10() throws IOException {
+<span class="nc" id="L208">        Bson query = and(regex(&quot;name&quot;, &quot;India&quot;),</span>
+<span class="nc" id="L209">                or(regex(&quot;neighborhood&quot;, &quot;Downtown&quot;), regex(&quot;neighborhood&quot;, &quot;Oakland&quot;)),</span>
+<span class="nc" id="L210">                regex(&quot;city&quot;, &quot;Pittsburgh&quot;),</span>
+<span class="nc" id="L211">                regex(&quot;hours&quot;, &quot;'Friday': '17:00-&quot;),</span>
+<span class="nc" id="L212">                regex(&quot;attributes&quot;, &quot;'RestaurantsDelivery': True&quot;)</span>
+        );
+
+<span class="nc" id="L215">        List&lt;String&gt; distinctNames = mongoCollection.distinct(&quot;name&quot;, query, String.class)</span>
+<span class="nc" id="L216">                .into(new ArrayList&lt;&gt;());</span>
+<span class="nc" id="L217">        Collections.sort(distinctNames);</span>
+<span class="nc bnc" id="L218" title="All 2 branches missed.">        for (String name : distinctNames) {</span>
+<span class="nc" id="L219">            System.out.println(name);</span>
+<span class="nc" id="L220">        }</span>
+<span class="nc" id="L221">    }</span>
+
+    /**
+     * Question 11.
+     *
+     * Find the names and addresses of &quot;Dental&quot; businesses that accept insurance,
+     * are open for appointments only, and have a star rating of 4 or higher.
+     * These businesses should be within the city of &quot;Ahwatukee&quot;.
+     *
+     * Print each result on a single line with the format &quot;Name: &lt;name&gt;, Address: &lt;address&gt;&quot;
+     *
+     * You are allowed to make changes such as modifying method name, parameter
+     * list and/or return type.
+     */
+    private static void q11() throws IOException {
+<span class="nc" id="L236">        Bson match = and(</span>
+<span class="nc" id="L237">                regex(&quot;city&quot;, &quot;Ahwatukee&quot;),</span>
+<span class="nc" id="L238">                regex(&quot;name&quot;, &quot;Dental&quot;),</span>
+<span class="nc" id="L239">                gte(&quot;stars&quot;, 4),</span>
+<span class="nc" id="L240">                regex(&quot;attributes&quot;, &quot;'AcceptsInsurance': True&quot;),</span>
+<span class="nc" id="L241">                regex(&quot;attributes&quot;, &quot;'ByAppointmentOnly': True&quot;)</span>
+        );
+
+<span class="nc" id="L244">        Bson group = Aggregates.group(</span>
+<span class="nc" id="L245">                new Document(&quot;name&quot;, &quot;$name&quot;).append(&quot;address&quot;, &quot;$address&quot;),</span>
+<span class="nc" id="L246">                Accumulators.first(&quot;name&quot;, &quot;$name&quot;),</span>
+<span class="nc" id="L247">                Accumulators.first(&quot;address&quot;, &quot;$address&quot;)</span>
+        );
+
+<span class="nc" id="L250">        List&lt;Document&gt; result = mongoCollection.aggregate(Arrays.asList(</span>
+<span class="nc" id="L251">                Aggregates.match(match),</span>
+                group
+<span class="nc" id="L253">        )).into(new ArrayList&lt;&gt;());</span>
+
+<span class="nc bnc" id="L255" title="All 2 branches missed.">        for (Document doc : result) {</span>
+<span class="nc" id="L256">            System.out.println(&quot;Name: &quot; + doc.getString(&quot;name&quot;)</span>
+<span class="nc" id="L257">                    + &quot;, Address: &quot; + doc.getString(&quot;address&quot;));</span>
+<span class="nc" id="L258">        }</span>
+
+<span class="nc" id="L260">    }</span>
+
+    /**
+     * Question 12.
+     *
+     * Count the number of unique cities represented in the businesses collection.
+     *
+     * Print the number on a single line.
+     *
+     * Note: You are not allowed to scan the whole table and count the number of records.
+     *
+     * You are allowed to make changes such as modifying method name, parameter
+     * list and/or return type.
+     */
+    private static void q12() throws Throwable {
+<span class="nc" id="L275">        long citiesCount = Objects.requireNonNull(mongoCollection.aggregate(Arrays.asList(</span>
+<span class="nc" id="L276">                group(&quot;$city&quot;),    // Group by the 'city' field</span>
+<span class="nc" id="L277">                count(&quot;uniqueCities&quot;)  // Count the number of groups (distinct cities)</span>
+<span class="nc" id="L278">        )).first()).getInteger(&quot;uniqueCities&quot;);</span>
+
+<span class="nc" id="L280">        System.out.println(citiesCount);</span>
+<span class="nc" id="L281">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>
