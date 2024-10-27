@@ -4,13 +4,20 @@ import com.mongodb.MongoClient;
 import com.mongodb.MongoClientURI;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
+import com.mongodb.client.model.Projections;
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 import org.bson.Document;
 import org.bson.conversions.Bson;
 import java.io.IOException;
+import java.util.*;
+import java.util.function.Consumer;
 
-import static com.mongodb.client.model.Filters.regex;
+import static com.mongodb.client.model.Aggregates.count;
+import static com.mongodb.client.model.Aggregates.group;
+import static com.mongodb.client.model.Filters.*;
+import static com.mongodb.client.model.Projections.fields;
+import static com.mongodb.client.model.Projections.include;
 
 
 public class MongoDBTasks {
@@ -148,8 +155,18 @@ public class MongoDBTasks {
      * list and/or return type.
      */
     private static void q9() throws IOException {
-        throw new UnsupportedOperationException(
-                "Waiting to be implemented");
+        Bson query = and(
+                regex("neighborhood", "Shadyside"),
+                regex("categories", "Asian Fusion"),
+                eq("attributes.WiFi", "free"),
+                eq("attributes.BikeParking", true)
+        );
+
+        List<Document> result = mongoCollection.find(query)
+                .projection(include("name")).into(new ArrayList<>());
+        for(Document doc: result){
+           System.out.println(doc.toJson());
+        }
     }
 
     /**
@@ -182,8 +199,23 @@ public class MongoDBTasks {
      * list and/or return type.
      */
     private static void q10() throws IOException {
-        throw new UnsupportedOperationException(
-                "Waiting to be implemented");
+        Bson query = and(or(regex("neighborhood", "Downtown"), regex("neighborhood", "Oakland")),
+                regex("name", "India"),
+                regex("city", "Pittsburgh"),
+                regex("hours.Friday", "17:00") ,
+                eq("attributes.RestaurantsDelivery", true)
+        );
+
+        List<Document> result = mongoCollection.find(query)
+                .projection(include("name")).into(new ArrayList<>());
+        List<String> businessNames = new ArrayList<>();
+        for (Document doc : result) {
+            businessNames.add(doc.getString("name"));
+        }
+        Collections.sort(businessNames);
+        for (String name : businessNames) {
+            System.out.println(name);
+        }
     }
 
     /**
@@ -199,8 +231,23 @@ public class MongoDBTasks {
      * list and/or return type.
      */
     private static void q11() throws IOException {
-        throw new UnsupportedOperationException(
-                "Waiting to be implemented");
+        Bson query = and(
+                regex("city","Ahwatukee"),
+                regex("name","Dental"),
+                gt("attributes.stars",4),
+                eq("attributes.insurance",true),
+                eq("attributes.appointments",true)
+        );
+        Bson projection = include("name", "address");
+        List<Document> result = mongoCollection.find(query).projection(projection).into(new ArrayList<>());
+        for(Document doc: result){
+            System.out.println(doc.toJson());
+        }
+//        mongoCollection.find(query).projection(projection).into(new ArrayList<>()).forEach((Consumer<Document>) doc -> {
+//            String name = doc.getString("name");
+//            String address = doc.getString("address");
+//            System.out.println("Name: " + name + ", Address: " + address);
+//        });
     }
 
     /**
@@ -216,7 +263,11 @@ public class MongoDBTasks {
      * list and/or return type.
      */
     private static void q12() throws Throwable {
-        throw new UnsupportedOperationException(
-                "Waiting to be implemented");
+        long citiesCount = Objects.requireNonNull(mongoCollection.aggregate(Arrays.asList(
+                group("$city"),    // Group by the 'city' field
+                count("uniqueCities")  // Count the number of groups (distinct cities)
+        )).first()).getInteger("uniqueCities");
+
+        System.out.println(citiesCount);
     }
 }
