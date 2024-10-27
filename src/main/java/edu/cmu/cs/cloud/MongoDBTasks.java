@@ -202,7 +202,7 @@ public class MongoDBTasks {
         Bson query = and(regex("name", "India"),
                 or(regex("neighborhood", "Downtown"), regex("neighborhood", "Oakland")),
                 regex("city", "Pittsburgh"),
-                regex("attributes", "'Friday': '17:00"),
+                regex("hours", "'Friday': '17:00-"),
                 regex("attributes", "'RestaurantsDelivery': True")
         );
 
