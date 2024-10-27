@@ -164,9 +164,8 @@ public class MongoDBTasks {
         );
 
         List<Document> result= mongoCollection.find(query).projection(include("name")).into(new ArrayList<>());
-        System.out.println("Scan finished. "+result);
-        for(Document doc: result){
-           System.out.println("Scan finished. " + doc.toJson());
+        for (Document doc : result) {
+            System.out.println(doc.getString("name"));
         }
     }
 
