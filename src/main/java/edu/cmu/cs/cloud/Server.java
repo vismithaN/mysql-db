@@ -30,12 +30,14 @@ public class Server {
      * @return true if the reservation was successful, false otherwise.
      */
     public boolean reserve(String resourceID, Integer userID) {
-        if(jedis.exists(resourceID)) {
-            return false;
+        // Try to acquire the lock with a TTL of 30 seconds (to prevent deadlock)
+        if(jedis.exists(resourceID)) { return false; }
+        boolean isLocked = lock.acquireLock(resourceID, 30L);
+        if (isLocked) {
+            jedis.set(resourceID + ":owner", userID.toString());
+            return true;
         }
-        else {
-            return lock.acquireLock(resourceID,5L);
-        }
+        return false;
     }
 
     /**
@@ -47,6 +49,14 @@ public class Server {
      */
     public boolean checkout(String resourceID, Integer userID) {
         // TODO: complete this function
-        return lock.releaseLock(resourceID);
+        if(jedis.exists(resourceID)) {
+            String owner = jedis.get(resourceID + ":owner");
+            if(!owner.equals(userID.toString())) {
+                return false;
+            }
+            return lock.releaseLock(resourceID);
+        }
+        return false;
+
     }
 }
