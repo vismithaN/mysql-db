@@ -46,8 +46,7 @@ public class RedisLock {
      * @return true if the lock was successfully released, false otherwise.
      */
     public boolean releaseLock(String lockKey) {
-        String lock = jedis.get(lockKey);
-        if(Objects.equals(lock, "locked")) {
+        if(jedis.exists(lockKey) && Objects.equals(jedis.get(lockKey), "locked")) {
             long result = jedis.del(lockKey);
             return result == 1L;
         } else {
