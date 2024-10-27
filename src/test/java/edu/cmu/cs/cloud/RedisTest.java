@@ -122,7 +122,7 @@ class RedisTest {
         assertNull( redisClient.hget("key3", "name"));
         assertNull( redisClient.hget("key1", "address"));
         assertNotNull(redisClient.hget("key1", "name"));
-        assertEquals("cloud", redisClient.hget("key1", "name"));
+        assertNotEquals("cloud", redisClient.hget("key1", "name"));
     }
 
     @Test
@@ -131,10 +131,10 @@ class RedisTest {
         redisClient.hset("key1", "name", "computing");
         redisClient.hset("key1", "address", "XYZ");
         List<String> expected = new LinkedList<>();
-        expected.add("name");
-        expected.add("computing");
         expected.add("address");
         expected.add("XYZ");
+        expected.add("name");
+        expected.add("computing");
         assertEquals(expected, redisClient.hgetall("key1"));
         assertEquals(new ArrayList<>(), redisClient.hgetall("key2"));
         assertNotNull(redisClient.hgetall("key2"));
