@@ -18,6 +18,12 @@
               "url":"https://stackoverflow.com/questions/15504554/sql-vs-like-vs-like-binary-not-case-sensitive",
               "code":"LIKE BINARY",
               "description":"Case sensitive String comparision for q5"
-    }
+    },
+    {
+                  "title":"Filters Builders",
+                  "url":"https://www.mongodb.com/docs/drivers/java/sync/current/fundamentals/builders/filters/#std-label-comparison",
+                  "code":"find()",
+                  "description":"Find API to execute search"
+        }
   ]
 }

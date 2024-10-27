@@ -163,8 +163,11 @@ public class MongoDBTasks {
                 regex("attributes", "'BikeParking': True")
         );
 
-        List<Document> result= mongoCollection.find(query).projection(include("name")).into(new ArrayList<>());
-        for (Document doc : result) {
+        List<Document> distinctNames = mongoCollection.distinct("name", query, Document.class)
+                .into(new ArrayList<>());
+
+//        List<Document> result= mongoCollection.find(query).projection(include("name")).into(new ArrayList<>());
+        for (Document doc : distinctNames) {
             System.out.println(doc.getString("name"));
         }
     }
