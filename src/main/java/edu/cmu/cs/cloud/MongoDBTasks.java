@@ -250,7 +250,7 @@ public class MongoDBTasks {
         )).into(new ArrayList<>());
 
         for (Document doc : result) {
-            System.out.println(doc.toJson());
+            System.out.println("Name: "+doc.getString("name")+", Address: "+doc.getString("address"));
         }
 
     }
