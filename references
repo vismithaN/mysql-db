@@ -2,10 +2,10 @@
   "referenceGuide":"Cite all the reference sources in the required format. Proper citations will help you avoid unnecessary trouble but does not make it acceptable to copy code. Read the course and university policy statements in this regard. When working with others, limit the discussion to block diagrams and arrows. Do not look at another students' code. Read the JSON semantics and make use of JSON validator from the Internet if needed.",
   "websites":[
     {
-      "title":"float64 with pandas to_csv",
-      "url":"https://stackoverflow.com/questions/12877189/float64-with-pandas-to-csv",
-      "code":"float_format="%.2f"",
-      "description":"2 decimal places formatting in q1"
+          "title":"float64 with pandas to_csv",
+          "url":"https://stackoverflow.com/questions/12877189/float64-with-pandas-to-csv",
+          "code":"float_format="%.2f"",
+          "description":"2 decimal places formatting in q1"
     },
     {
           "title":"How do you remove the column name row when exporting a pandas DataFrame?",
@@ -14,22 +14,28 @@
           "description":"Removing header in df.describe()"
     },
     {
-              "title":"SQL = vs LIKE vs LIKE BINARY, not case sensitive",
-              "url":"https://stackoverflow.com/questions/15504554/sql-vs-like-vs-like-binary-not-case-sensitive",
-              "code":"LIKE BINARY",
-              "description":"Case sensitive String comparision for q5"
+          "title":"SQL = vs LIKE vs LIKE BINARY, not case sensitive",
+          "url":"https://stackoverflow.com/questions/15504554/sql-vs-like-vs-like-binary-not-case-sensitive",
+          "code":"LIKE BINARY",
+          "description":"Case sensitive String comparision for q5"
     },
     {
-                  "title":"Filters Builders",
-                  "url":"https://www.mongodb.com/docs/drivers/java/sync/current/fundamentals/builders/filters/#std-label-comparison",
-                  "code":"find()",
-                  "description":"Find API to execute search"
+          "title":"Filters Builders",
+          "url":"https://www.mongodb.com/docs/drivers/java/sync/current/fundamentals/builders/filters/#std-label-comparison",
+          "code":"find()",
+          "description":"Find API to execute search"
     },
     {
-                      "title":"HGETALL",
-                      "url":"https://redis.io/docs/latest/commands/hgetall/",
-                      "code":"hgetall()",
-                      "description":"Understand the working og hgetall()"
+          "title":"HGETALL",
+          "url":"https://redis.io/docs/latest/commands/hgetall/",
+          "code":"hgetall()",
+          "description":"Understand the working of hgetall()"
+    },
+    {
+          "title":"Intro to JaCoCo",
+          "url":"https://www.baeldung.com/jacoco",
+          "code":"Jacoco XML report",
+          "description":"Understanding the Jacoco report"
     }
 
   ]
