@@ -12,6 +12,7 @@ import redis.clients.jedis.HostAndPort;
 import java.io.IOException;
 import java.nio.file.Paths;
 
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import org.apache.commons.pool2.impl.GenericObjectPoolConfig;
 
@@ -74,37 +75,89 @@ class RedisLockTest {
 
     @Test
     void acquireLockFailure() {
-        throw new RuntimeException("add test cases on your own");
+        Jedis jedis = jedisPool.getResource();
+        RedisLock redisLock = new RedisLock(jedis);
+        jedis.flushAll();
+        //Cant acquire lock before time period ends
+        assertTrue(redisLock.acquireLock("lockKey", 1000L));
+        assertFalse(redisLock.acquireLock("lockKey", 1000L));
+
     }
 
     @Test
     void acquireLockMultipleFailure() {
-        throw new RuntimeException("add test cases on your own");
+        Jedis jedis = jedisPool.getResource();
+        RedisLock redisLock = new RedisLock(jedis);
+        jedis.flushAll();
+        // Acquire three different locks
+        assertTrue(redisLock.acquireLock("lockKey1", 1000L));
+        assertTrue(redisLock.acquireLock("lockKey2", 1000L));
+        assertTrue(redisLock.acquireLock("lockKey3", 1000L));
+        // Acquire the same locks again
+        assertFalse(redisLock.acquireLock("lockKey1", 1000L));
+        assertFalse(redisLock.acquireLock("lockKey2", 1000L));
+        assertFalse(redisLock.acquireLock("lockKey3", 1000L));
+
     }
 
     @Test
     void releaseLockSuccess() {
-        throw new RuntimeException("add test cases on your own");
+        Jedis jedis = jedisPool.getResource();
+        RedisLock redisLock = new RedisLock(jedis);
+        jedis.flushAll();
+        // Acquire a lock
+        assertTrue(redisLock.acquireLock("lockKey", 1000L));
+        // Release the lock
+        assertTrue(redisLock.releaseLock("lockKey"));
     }
 
     @Test
     void releaseLockFailure() {
-        throw new RuntimeException("add test cases on your own");
+        Jedis jedis = jedisPool.getResource();
+        RedisLock redisLock = new RedisLock(jedis);
+        jedis.flushAll();
+        // Attempt to release lock that was never acquired
+        assertFalse(redisLock.releaseLock("nonexistent"));
     }
 
     @Test
-    void lockExpiration() {
-        throw new RuntimeException("add test cases on your own");
+    void lockExpiration() throws InterruptedException {
+        Jedis jedis = jedisPool.getResource();
+        RedisLock redisLock = new RedisLock(jedis);
+        jedis.flushAll();
+        // Acquire a lock with a short TTL
+        assertTrue(redisLock.acquireLock("lockKey", 1L));
+        // Wait for the TTL to expire
+        Thread.sleep(1500); // Sleep for 1.5 seconds
+        // Try to acquire the lock again, should succeed after expiration
+        assertTrue(redisLock.acquireLock("lockKey", 1000L));
+        assertFalse(redisLock.acquireLock("lockKey", 1000L));
     }
 
     @Test
     void aquireAndRelease() {
-        throw new RuntimeException("add test cases on your own");
+        Jedis jedis = jedisPool.getResource();
+        RedisLock redisLock = new RedisLock(jedis);
+        jedis.flushAll();
+        // Acquire lock
+        assertTrue(redisLock.acquireLock("lockKey", 1000L));
+        // Release lock
+        assertTrue(redisLock.releaseLock("lockKey"));
+        // Acquire lock again, should succeed after release
+        assertTrue(redisLock.acquireLock("lockKey", 1000L));
     }
 
     @Test
-    void releaseAfterTimeout() {
-        throw new RuntimeException("add test cases on your own");
+    void releaseAfterTimeout() throws InterruptedException {
+        Jedis jedis = jedisPool.getResource();
+        RedisLock redisLock = new RedisLock(jedis);
+        jedis.flushAll();
+        // Acquire lock with a short TTL
+        assertTrue(redisLock.acquireLock("lockKey", 1L));
+        // Wait for TTL to expire
+        Thread.sleep(1500);
+        // Release lock after the TTL has expired, should fail
+        assertFalse(redisLock.releaseLock("lockKey"));
     }
 }
 

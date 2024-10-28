@@ -9,6 +9,7 @@ import redis.clients.jedis.HostAndPort;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
 
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.io.IOException;
@@ -58,31 +59,70 @@ class ServerTest {
 
     @Test
     void reserveOccupiedResource() {
-        throw new RuntimeException("add test cases on your own");
+        Jedis jedis = jedisPool.getResource();
+        Server server = new Server(jedis);
+        jedis.flushAll();
+        // user1 reserves the resource
+        assertTrue(server.reserve("resource1", 1));
+        // user2 tries to reserve same resource
+        assertFalse(server.reserve("resource1", 2));
     }
 
     @Test
     void checkoutOccupiedAndOwnedResource() {
-        throw new RuntimeException("add test cases on your own");
+        Jedis jedis = jedisPool.getResource();
+        Server server = new Server(jedis);
+        jedis.flushAll();
+        // user1 reserves resource
+        assertTrue(server.reserve("resource1", 1));
+        // User1 checks out resource
+        assertTrue(server.checkout("resource1", 1));
     }
 
     @Test
     void checkoutEmptyResource() {
-        throw new RuntimeException("add test cases on your own");
+        Jedis jedis = jedisPool.getResource();
+        Server server = new Server(jedis);
+        jedis.flushAll();
+        // user checkout a resource that has not been reserved
+        assertFalse(server.checkout("resource1", 1));
     }
 
     @Test
     void checkoutUnownedResource() {
-        throw new RuntimeException("add test cases on your own");
+        Jedis jedis = jedisPool.getResource();
+        Server server = new Server(jedis);
+        jedis.flushAll();
+        // user1 reserves the resource
+        assertTrue(server.reserve("resource1", 1));
+        // user 2 tries to checkout the resource
+        assertFalse(server.checkout("resource1", 2));
     }
 
     @Test
     void reserveAndCheckout() {
-        throw new RuntimeException("add test cases on your own");
+        Jedis jedis = jedisPool.getResource();
+        Server server = new Server(jedis);
+        jedis.flushAll();
+
+        assertTrue(server.reserve("resource1", 1));
+        assertTrue(server.checkout("resource1", 1));
+        assertTrue(server.reserve("resource1", 1));
     }
 
     @Test
     void reserveAndCheckoutMultipleResources() {
-        throw new RuntimeException("add test cases on your own");
+        Jedis jedis = jedisPool.getResource();
+        Server server = new Server(jedis);
+        jedis.flushAll();
+        // user1 reserves two resources
+        assertTrue(server.reserve("resource1", 1));
+        assertTrue(server.reserve("resource2", 1));
+        // user1 checks out  first resource
+        assertTrue(server.checkout("resource1", 1));
+        // user2 reserves first resource after it's checked out
+        assertTrue(server.reserve("resource1", 2));
+        // user1 checks out second resource
+        assertTrue(server.checkout("resource2", 1));
     }
 }
