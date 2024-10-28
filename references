@@ -14,16 +14,46 @@
           "description":"Removing header in df.describe()"
     },
     {
-              "title":"SQL = vs LIKE vs LIKE BINARY, not case sensitive",
-              "url":"https://stackoverflow.com/questions/15504554/sql-vs-like-vs-like-binary-not-case-sensitive",
-              "code":"LIKE BINARY",
-              "description":"Case sensitive String comparision for q5"
+          "title":"SQL = vs LIKE vs LIKE BINARY, not case sensitive",
+          "url":"https://stackoverflow.com/questions/15504554/sql-vs-like-vs-like-binary-not-case-sensitive",
+          "code":"LIKE BINARY",
+          "description":"Case sensitive String comparision for q5"
     },
     {
-                  "title":"Filters Builders",
-                  "url":"https://www.mongodb.com/docs/drivers/java/sync/current/fundamentals/builders/filters/#std-label-comparison",
-                  "code":"find()",
-                  "description":"Find API to execute search"
-        }
+          "title":"Filters Builders",
+          "url":"https://www.mongodb.com/docs/drivers/java/sync/current/fundamentals/builders/filters/#std-label-comparison",
+          "code":"find()",
+          "description":"Find API to execute search"
+    },
+    {
+              "title":"$regex",
+              "url":"https://www.mongodb.com/docs/manual/reference/operator/query/regex/",
+              "code":"regex()",
+              "description":"Regex Filter"
+    },
+    {
+              "title":"gte",
+              "url":"https://mongodb.github.io/mongo-java-driver/5.2/apidocs/mongodb-driver-core/com/mongodb/client/model/Filters.html#gte(java.lang.String,TItem)",
+              "code":"gte()",
+              "description":"Find restuarants with stars >=4"
+    },
+    {
+              "title":"or",
+              "url":"https://mongodb.github.io/mongo-java-driver/5.2/apidocs/mongodb-driver-core/com/mongodb/client/model/Filters.html#or(org.bson.conversions.Bson...)",
+              "code":"or()",
+              "description":"Find either neighbourhoods"
+    },
+    {
+              "title":"distinct",
+              "url":"https://www.mongodb.com/docs/manual/reference/command/distinct/",
+              "code":"distinct()",
+              "description":"returns a document that contains an array of the distinct values"
+    },
+    {
+                  "title":"group",
+                  "url":"https://www.mongodb.com/docs/manual/reference/operator/aggregation/group/",
+                  "code":"group()",
+                  "description":"The group() stage separates documents into groups according to a group key"
+    }
   ]
 }

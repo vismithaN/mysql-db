@@ -214,7 +214,7 @@ public class MongoDBTasks {
 
         List<String> distinctNames = mongoCollection.distinct("name", query, String.class)
                 .into(new ArrayList<>());
-        Collections.sort(distinctNames);
+        Collections.sort(distinctNames); // sort names in lexicographical order
         for (String name : distinctNames) {
             System.out.println(name);
         }
@@ -240,13 +240,13 @@ public class MongoDBTasks {
                 regex("attributes", "'AcceptsInsurance': True"),
                 regex("attributes", "'ByAppointmentOnly': True")
         );
-
+        // Group matching documents by name and address fields
         Bson group = Aggregates.group(
                 new Document("name", "$name").append("address", "$address"),
-                Accumulators.first("name", "$name"),
-                Accumulators.first("address", "$address")
+                Accumulators.first("name", "$name"), // Consolidation of fields
+                Accumulators.first("address", "$address") // Consolidation of fields
         );
-
+        // Perform the aggregation pipeline with match and group stages
         List<Document> result = mongoCollection.aggregate(Arrays.asList(
                 Aggregates.match(match),
                 group
