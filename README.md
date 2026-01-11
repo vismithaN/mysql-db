@@ -1,6 +1,7 @@
 # Database Systems Project
 
-A comprehensive educational project demonstrating various database technologies and distributed storage systems. This project includes implementations for MySQL, Hibernate ORM, MongoDB, Redis, and Memcached.
+A educational project demonstrating various database technologies and distributed storage systems. 
+This project includes implementations for MySQL, Hibernate ORM, MongoDB, Redis, and Memcached.
 
 ## Table of Contents
 
