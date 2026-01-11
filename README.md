@@ -31,13 +31,13 @@ This project is designed as a learning platform for understanding heterogeneous 
 - **Java 8** - Primary programming language
 - **Maven** - Build and dependency management
 - **MySQL 5.7+** - Relational database
-- **Hibernate 5.2** - ORM framework
+- **Hibernate 5.2.12.Final** - ORM framework
 - **MongoDB** - NoSQL document database
 - **Redis** - In-memory data structure store
 - **Memcached** - Distributed memory caching system
 - **Python** - Data analysis scripts
 - **SQLite** - Embedded database for Yelp dataset
-- **JUnit** - Testing framework
+- **JUnit 4.12 & JUnit 5.2.0** - Testing frameworks
 - **Lombok** - Java annotation library for reducing boilerplate code
 
 ## Prerequisites
@@ -49,7 +49,7 @@ Before running this project, ensure you have the following installed:
 - MySQL Server 5.7 or higher
 - MongoDB (if running MongoDB tasks)
 - Redis (if running Redis tasks)
-- Python 3.x with pandas and MySQLdb libraries (for data analysis tasks)
+- Python 3.x with pandas and mysqlclient libraries (for data analysis tasks)
 - Git
 
 ## Project Structure
